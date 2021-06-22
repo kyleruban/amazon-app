@@ -19,6 +19,7 @@
   "homepage": "https://github.com/kyleruban/amazon-app#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "gh-pages": "^3.2.3",
     "http-proxy-middleware": "^2.0.0"
   },
   "devDependencies": {
