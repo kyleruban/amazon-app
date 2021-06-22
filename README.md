@@ -4,4 +4,4 @@ git add .
 
 git commit -m "comment"
 
-git push-u origin master
+git push -u origin master
