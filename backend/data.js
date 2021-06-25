@@ -46,7 +46,7 @@ const data = {
       category: 'Shirts',
       image: '/images/p3.jpg',
       price: 220,
-      countInStock: 0,
+      countInStock: 1,
       brand: 'Lacoste',
       rating: 4.8,
       numReviews: 17,
