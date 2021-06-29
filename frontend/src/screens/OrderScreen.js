@@ -3,9 +3,10 @@ import Axios from 'axios';
  import React, { useEffect, useState } from 'react';
  import { useDispatch, useSelector } from 'react-redux';
  import { Link } from 'react-router-dom';
- import { detailsOrder } from '../actions/orderActions';
+ import { detailsOrder, payOrder } from '../actions/orderActions';
  import LoadingBox from '../components/LoadingBox';
  import MessageBox from '../components/MessageBox';
+ import { ORDER_PAY_RESET } from '../constants/orderConstants';
 
  export default function OrderScreen(props) {
    const orderId = props.match.params.id;
@@ -13,6 +14,15 @@ import Axios from 'axios';
    //get order details from orderDetails object redux store
    const orderDetails = useSelector((state) => state.orderDetails);
    const { order, loading, error } = orderDetails;
+
+   //get order pay from orderPay object redux store
+  const orderPay = useSelector((state) => state.orderPay);
+   const {
+     loading: loadingPay,
+     error: errorPay,
+     success: successPay,
+   } = orderPay;
+
    const dispatch = useDispatch();
    useEffect(() => {
     const addPayPalScript = async () => {
@@ -26,22 +36,26 @@ import Axios from 'axios';
       };
       document.body.appendChild(script);
     };
-    if (!order) {
+
+    //if order is not found
+    if (!order || successPay || (order && order._id !== orderId)) {
+      dispatch({ type: ORDER_PAY_RESET });
       dispatch(detailsOrder(orderId));
     } else {
       if (!order.isPaid) {
-        if (!window.paypal) {
-          addPayPalScript();
-        } else {
-          setSdkReady(true);
+       if (!window.paypal) {
+         addPayPalScript();
+       } else {
+         setSdkReady(true);
         }
       }
     }
-  }, [dispatch, order, orderId, sdkReady]);
+}, [dispatch, order, orderId, sdkReady, successPay]);
 
-  const successPaymentHnadler = () => {
-    // TODO: dispatch pay order
+  const successPaymentHandler = (paymentResult) => {
+    dispatch(payOrder(order, paymentResult));
   };
+
    return loading ? (
      <LoadingBox></LoadingBox>
    ) : error ? (
@@ -156,10 +170,17 @@ import Axios from 'axios';
                    {!sdkReady ? (
                      <LoadingBox></LoadingBox>
                    ) : (
-                     <PayPalButton
-                       amount={order.totalPrice}
-                       onSuccess={successPaymentHnadler}
-                     ></PayPalButton>
+                    <>
+                       {errorPay && (
+                         <MessageBox variant="danger">{errorPay}</MessageBox>
+                       )}
+                       {loadingPay && <LoadingBox></LoadingBox>}
+
+                       <PayPalButton
+                         amount={order.totalPrice}
+                         onSuccess={successPaymentHandler}
+                       ></PayPalButton>
+                     </>
                    )}
                  </li>
                )}
