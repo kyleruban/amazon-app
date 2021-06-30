@@ -4,6 +4,7 @@ import { createStore, compose, applyMiddleware, combineReducers } from 'redux';
  import { orderCreateReducer, orderDetailsReducer, orderMineListReducer, orderPayReducer } from './reducers/orderReducers';
  import {
   productCreateReducer,
+   productDeleteReducer,
   productDetailsReducer,
   productListReducer,
   productUpdateReducer,
@@ -44,6 +45,7 @@ const initialState = {
    userUpdateProfile: userUpdateProfileReducer,
    productCreate: productCreateReducer,
    productUpdate: productUpdateReducer,
+   productDelete: productDeleteReducer,
  });
  const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
  const store = createStore(
