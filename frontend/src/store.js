@@ -3,6 +3,7 @@ import { createStore, compose, applyMiddleware, combineReducers } from 'redux';
  import { cartReducer } from './reducers/cartReducers';
  import {
   orderCreateReducer,
+  orderDeleteReducer,
   orderDetailsReducer,
   orderListReducer,
   orderMineListReducer,
@@ -53,6 +54,7 @@ const initialState = {
    productUpdate: productUpdateReducer,
    productDelete: productDeleteReducer,
    orderList: orderListReducer,
+   orderDelete: orderDeleteReducer,
  });
  const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
  const store = createStore(
